@@ -1,5 +1,5 @@
-use std::fs::{create_dir_all, File};
 use clap::Parser;
+use std::fs::{File, create_dir_all};
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -9,12 +9,17 @@ struct Args {
 }
 
 fn main() {
-    // TODO: Use $HOME and realpath
     let args = Args::parse();
-    let dir_path = format!("/Users/john/audits/{}", args.name);
+
+    // Store notes under `$HOME/audits/project-name`
+    let dir_path = format!(
+        "{}/audits/{}",
+        std::env::home_dir().expect("must access home dir").display(),
+        args.name
+    );
     create_dir_all(&dir_path).expect("cannot continue without creating the root dir");
 
-    let files = [ 
+    let files = [
         "access-control",
         "core-concepts",
         "findings",
@@ -26,4 +31,7 @@ fn main() {
     for file in files {
         let _ = File::create(format!("{dir_path}/{file}.md"));
     }
+    // TODO: Populate files with some markdown template
+
+    println!("{dir_path}");
 }
