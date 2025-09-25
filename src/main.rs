@@ -1,25 +1,5 @@
-use std::fs::File;
-use std::io::Error;
+use std::fs::{create_dir_all, File};
 use clap::Parser;
-
-
-fn make_files(name: String) -> Result<(), Error> {
-    let files = [ 
-        "access-control",
-        "core-concepts",
-        "findings",
-        "flows",
-        "notes",
-        "resources",
-    ];
-    // TODO: switch to $HOME if possible
-    let dir_name = format!("/Users/john/audits/{name}");
-    std::fs::create_dir_all(&dir_name).unwrap();
-    for file in files {
-        let _ = File::create(format!("{dir_name}/{file}.md"));
-    }
-    Ok(())
-}
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -29,6 +9,21 @@ struct Args {
 }
 
 fn main() {
+    // TODO: Use $HOME and realpath
     let args = Args::parse();
-    make_files(args.name).unwrap();
+    let dir_path = format!("/Users/john/audits/{}", args.name);
+    create_dir_all(&dir_path).expect("cannot continue without creating the root dir");
+
+    let files = [ 
+        "access-control",
+        "core-concepts",
+        "findings",
+        "flows",
+        "notes",
+        "resources",
+        "questions",
+    ];
+    for file in files {
+        let _ = File::create(format!("{dir_path}/{file}.md"));
+    }
 }
