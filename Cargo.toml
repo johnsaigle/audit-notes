@@ -6,12 +6,6 @@ edition = "2024"
 [dependencies]
 clap = { version = "4.5.4", features = ["derive"] }
 
-[lints.clippy]
-complexity = "warn"
-nursery = "warn"
-pedantic = "warn"
-style = "warn"
-
 # --- scaffold ---
 [profile.dev]
 overflow-checks = true
