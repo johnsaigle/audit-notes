@@ -25,7 +25,6 @@ fn main() {
         "core-concepts",
         "findings",
         "flows",
-        "invariants",
         "llm",
         "notes",
         "resources",
@@ -47,22 +46,25 @@ fn main() {
     let today = chrono::Local::now().format("%Y-%m-%d").to_string();
     let title = args.name.split('-').map(|w| {
         let mut c = w.chars();
-        match c.next() {
-            None => String::new(),
-            Some(first) => first.to_uppercase().collect::<String>() + c.as_str(),
-        }
+        c.next().map_or_else(String::new, |first| first.to_uppercase().collect::<String>() + c.as_str())
     }).collect::<Vec<_>>().join(" ");
 
     let notes_content = format!(
-        "# {title} - {today}\n\n## TODO\n\n- Map primary flows\n- Run tests\n- Read Docs\n\n### SAST\n- Run static analysis tools (e.g., Slither, Mythril)\n- Review compiler warnings\n- Check for known vulnerability patterns\n\n## Notes\n\n",
-        title = title,
-        today = today
+        "# {title} - {today}\n\n## TODO\n\n- Map primary flows\n- Run tests\n- Read Docs\n\n### SAST\n- Run static analysis tools\n- Review compiler warnings\n- Check for known vulnerability patterns\n\n## Notes\n\n"
     );
     let mut notes_file = File::create(format!("{dir_path}/notes.md"))
         .expect("cannot create notes.md");
     notes_file
         .write_all(notes_content.as_bytes())
         .expect("cannot write to notes.md");
+
+    // Populate invariants.md with template content
+    let invariants_content = "# Invariants\n\n## Explicit Invariants\n\n## Implicit Invariants\n\n";
+    let mut invariants_file = File::create(format!("{dir_path}/invariants.md"))
+        .expect("cannot create invariants.md");
+    invariants_file
+        .write_all(invariants_content.as_bytes())
+        .expect("cannot write to invariants.md");
 
     println!("{dir_path}");
 }
