@@ -7,6 +7,9 @@ edition = "2024"
 chrono = "0.4"
 clap = { version = "4.5.4", features = ["derive"] }
 
+[dev-dependencies]
+tempfile = "3"
+
 # --- scaffold ---
 [profile.dev]
 overflow-checks = true
