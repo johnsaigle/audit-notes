@@ -40,7 +40,12 @@ fn create_audit_notes(home: &Path, name: &str, force: bool, preset: Option<&Pres
 
     write_file(&dir_path, "access-control", "", force);
     write_file(&dir_path, "core-concepts", "", force);
-    write_file(&dir_path, "findings", "", force);
+    write_file(
+        &dir_path,
+        "findings",
+        "# Findings\n\n# Suggestions\n\n",
+        force,
+    );
     write_file(&dir_path, "flows", "", force);
     write_file(&dir_path, "resources", "", force);
     write_file(&dir_path, "questions", "", force);
@@ -145,6 +150,9 @@ mod tests {
         assert!(notes.contains("## TODO"));
         assert!(notes.contains("- Map primary flows"));
         assert!(notes.contains("### SAST"));
+
+        let findings = fs::read_to_string(audit_dir.join("findings.md")).expect("read findings.md");
+        assert_eq!(findings, "# Findings\n\n# Suggestions\n\n");
 
         let invariants =
             fs::read_to_string(audit_dir.join("invariants.md")).expect("read invariants.md");
